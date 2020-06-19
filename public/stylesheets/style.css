@@ -1,8 +1,44 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+#searchbar {
+    transition: top 0.5s; /* Transition effect when sliding down (and up) */
+    top: 25px;
 }
 
-a {
-  color: #00B7FF;
+.form-control {
+    border-width: 0px; !important;
+}
+
+input.transparent-input {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+input.transparent-input:focus {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.image:hover {
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+#images-container {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.image {
+    display: flex;
+    transition-duration: 0.2s;
+
+}
+
+.image-card {
+
+}
+
+.img-thumbnail {
+    margin: 0.5rem auto;
+    padding: 0.5rem;
+    /* hide images with opacity set to 0 until image is loaded ant JavaScript changes to opacity to 1 */
+    opacity: 0;
+    transition: opacity 1s;
 }

@@ -1,13 +1,53 @@
-<html>
-
+<!--<!DOCTYPE html>-->
+<html lang="en">
 <head>
-  <title>Express</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="PhotoWall App for relaxing (images from Flickr)">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Flickr, Node.js, WebSocket, Express.js">
+    <meta name="author" content="Martynas Skaringa">
+    <title>PhotoWall App</title>
+
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./stylesheets/style.css">
+
 </head>
 
-<body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
-</body>
+<body class="bg-dark">
+<header>
+    <div id="searchbar" class="fixed-top">
+        <form id="search-form" class="d-flex justify-content-center">
+            <input id="search" class="form-control form-control-lg transparent-input w-50 p-3 shadow-sm" type="search"
+                   placeholder="Search for images on Flickr" aria-label="Search" autocomplete="off" >
+        </form>
+    </div>
+</header>
 
+
+<div id="images-container" class="container-fluid">
+    <div class="row d-flex align-items-center">
+
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"
+        integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+<script src="./javascripts/main.js"></script>
+
+</body>
 </html>
