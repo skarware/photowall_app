@@ -1,4 +1,4 @@
-const imagesContainerRow = document.querySelector('div#images-container .row')
+const cardsContainer = document.getElementById('cards-container')
 const searchForm = document.getElementById('search-form');
 const searchBar = document.getElementById('searchbar')
 
@@ -49,21 +49,30 @@ const processDataFromServer = function processFlickrDataFromServer({page, pages,
     images.forEach((el) => appendImage(el))
 }
 
-// Destructure object argument and make div and img elements, then append image to DOM
+/**
+ * Destructure object argument and make divs and img elements structure, form img src url, then append to DOM
+ * <div id="cards-container" class="row">
+ *     <div class="col-12 col-lg-6 col-xl-4 card-img">
+ *          <img class="img-thumbnail" src="..." alt="Card title">
+ *          <div class="card-img-overlay">
+ *              <h5 class="card-title">Card title</h5>
+ */
 const appendImage = function appendImageToDOM({farm, id, secret, server, title}) {
+
     // Create new div element for image card
-    const div = document.createElement('div');
+    const divCardElement = document.createElement('div');
+
     /**
      * Then display size < 992px use one column across 12;
      * then it is Large (≥992px) use two columns 6+6;
      * then Extra large (≥1200px) use three columns 4+4+4
      */
-    div.className = 'col-12 col-lg-6 col-xl-4 image';
+    divCardElement.className = 'col-12 col-lg-6 col-xl-4 card-img';
 
     // Create new img element with src pointing to Flickr servers, so it can be displayed by a browser
-    const img = document.createElement('img');
-    img.classList.add('img-thumbnail')
-    img.alt = title;
+    const imgThumbElement = document.createElement('img');
+    imgThumbElement.classList.add('img-thumbnail')
+    imgThumbElement.alt = title;
     /**
      * Flickr URL takes the following format:
      * https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstzb].jpg
@@ -84,18 +93,21 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
      † Medium 800, large 1600, and large 2048 photos only exist after March 1st 2012.
      */
     // img.src = 'https://farm' + farm + '.staticflickr.com/' + server + '/' + id + '_' + secret + '.jpg';
-    img.src = 'https://farm' + farm + '.staticflickr.com/' + server + '/' + id + '_' + secret + '_z.jpg';
+    imgThumbElement.src = 'https://farm' + farm + '.staticflickr.com/' + server + '/' + id + '_' + secret + '_z.jpg';
 
     // Then image downloaded by browser set its opacity to 1 for fade-in transition effect
-    img.onload = () => {
-        img.style.opacity = '1';
+    imgThumbElement.onload = () => {
+        imgThumbElement.style.opacity = '1';
     }
 
-    // append created img element to div element as child
-    div.append(img);
+    // Insert card-img-overlay element with title received from Flickr
+    // divCardElement.innerHTML = '<div class="img-overlay"><h5 class="card-title">' + title + '</h5></div>';
 
-    // append created div element to imagesContainerRow element as child
-    imagesContainerRow.append(div);
+    // append created img element to div element as child
+    divCardElement.append(imgThumbElement);
+
+    // append created div element to cardsContainer element as child
+    cardsContainer.append(divCardElement);
 }
 
 // Fetch images from Flick by sending a WebSocket message to back-end with request data
@@ -126,7 +138,7 @@ const searchFormHandler = function searchFormEventHandler(event) {
     fetchImages(searchQuery, 1);
 
     // New search query given, means need to clear previous search images from DOM
-    imagesContainerRow.innerHTML = '';
+    cardsContainer.innerHTML = '';
 
 
 };
