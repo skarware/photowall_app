@@ -140,10 +140,10 @@ const scrollShowHideSearchBar = function scrollShowHideSearchBarEventHandler() {
     let currentScrollPos = window.pageYOffset;
     if (prevScrollPos > currentScrollPos) {
         // show searchBar 25px from viewport top
-        searchBar.style.top = '25'; // wont work with <!DOCTYPE html>
+        searchBar.style.top = '25px'; // wont work with <!DOCTYPE html>
     } else {
         // hide searchBar from viewport
-        searchBar.style.top = '-70'; // wont work with <!DOCTYPE html>
+        searchBar.style.top = '-70px'; // wont work with <!DOCTYPE html>
     }
 
     // set new scroll position as previous
