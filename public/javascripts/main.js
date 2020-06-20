@@ -1,3 +1,4 @@
+// Define more often used DOM elements
 const cardsContainer = document.getElementById('cards-container')
 const searchForm = document.getElementById('search-form');
 const searchBar = document.getElementById('searchbar')
@@ -9,35 +10,63 @@ let searchQuery = '';
 // Create a WebSocket and connect to a server
 const socket = new WebSocket('ws://localhost:3000');
 
-// On page initialization then WebSocket connection is open fetch photos from Flickr
-socket.onopen = (event) => {
-    console.info('Connected to server:', event.target.url);
-    // empty string is condition for fetch interesting photos for the most recent day on Flickr
-    fetchImages('', 1);
+/**
+ * main initialization function is the entry point into the application.
+ * it defines listeners for WebSocket evens: open, error, close and message
+ */
+const mainInit = function mainInitializationFunction() {
+    // On page initialization then WebSocket connection is open fetch photos from Flickr
+    socket.onopen = (event) => {
+
+        // TODO: test what happens if open event handler is set significantly delayed, after socket was created outside this fn
+
+        console.info('Connected to server:', event.target.url);
+        // empty string is condition for fetch interesting photos for the most recent day on Flickr
+        fetchImages('', 1);
+    }
+
+    // Listen for WebSocket error
+    socket.onerror = (event) => {
+        console.error('ERROR:', event);
+    }
+
+    // Listen for WebSocket connection closing
+    socket.onclose = (event) => {
+        console.info('Disconnecting from server:', event.code);
+
+        // TODO: need to implement auto reconnect on lost of connection to WebSocket server
+    }
+
+    // Listen for WebSocket messages from back-end server
+    socket.onmessage = (event) => {
+        // Parse data from back-end before processing it
+        const data = JSON.parse(event.data);
+
+        console.info('Message from server:', data); ///////////// FOR DEVELOPING PURPOSES ONLY ///////
+
+        // Check if there is data to process, if not then inform the user
+        if (data.total === 0) {
+            // If total photos = 0 inform the user
+            console.info("No photos found with searchQuery ", this.searchQuery);
+
+            // TODO: add message to the DOM to inform the user about zero search results
+
+        } else {
+            // Pass parsed data from server for processing and eventually appending DOM with images
+            processDataFromServer(data);
+        }
+    }
 }
 
-// Listen for WebSocket error
-socket.onerror = (event) => {
-    console.error('ERROR:', event);
-}
+/**
+ * make sure main initialization function called only when the page has completely loaded,
+ * even if defer is set on html side it is better to be safe than sorry.
+ */
+window.onload = mainInit;
 
-// Listen for WebSocket connection closing
-socket.onclose = (event) => {
-    console.info('Disconnecting from server:', event.code);
-}
-
-// Listen for WebSocket messages from back-end server
-socket.onmessage = (event) => {
-    // Parse data from back-end before processing it
-    const data = JSON.parse(event.data);
-
-    // TODO: what if total photos = 0? inform the user
-
-    console.info('Message from server:', data); ///////////// FOR DEVELOPING PURPOSES ONLY ///////
-
-    // Pass parsed data from server for processing and eventually appending DOM with images
-    processDataFromServer(data);
-}
+/**
+ * All named function expressions (eslint: func-style) defined below this line
+ */
 
 // Process server sent data to append images from Flickr to the DOM
 const processDataFromServer = function processFlickrDataFromServer({page, pages, total, images}) {
@@ -61,7 +90,6 @@ const processDataFromServer = function processFlickrDataFromServer({page, pages,
  *                  <h5 class="card-title">Card title</h5>
  */
 const appendImage = function appendImageToDOM({farm, id, secret, server, title}) {
-
     // Create new div element for columns
     const divColElement = document.createElement('div');
     /**
@@ -107,6 +135,7 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
         divColElement.style.opacity = '1';
     }
 
+    // FIXME: card title is out of image bounds seems that is because it is relative to divCardElement
     // Insert card-img-overlay element with title received from Flickr
     divCardElement.innerHTML = '<div class="img-overlay"><h5 class="card-title">' + title + '</h5></div>';
 
@@ -150,7 +179,7 @@ const searchFormHandler = function searchFormEventHandler(event) {
     const searchQuery = event.target.elements.search.value;
 
     // Scroll to top of document to avoid unnecessary scrollFetchImages invocation (seems to not work)
-    window.scrollTo(0,0)
+    window.scrollTo(0, 0)
 
     // Fetch new images from server with given searchQuery
     fetchImages(searchQuery, 1);
@@ -199,5 +228,3 @@ const scrollFetchImages = function scrollFetchImagesEventHandler() {
 }
 // Throttled scroll event listener for precarious image fetching from Flickr API (Throttling is a must to not flood Flickr API with requests)
 window.addEventListener('scroll', _.throttle(scrollFetchImages, 1000));
-
-

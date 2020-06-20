@@ -8,11 +8,14 @@
     <meta name="author" content="Martynas Skaringa">
     <title>PhotoWall App</title>
 
-    <!-- CSS only -->
+    <!-- Bootstrap CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-    <!--    &lt;!&ndash; JS, Popper.js, and jQuery &ndash;&gt;-->
+    <!-- Main CSS to override or papildyti app styles -->
+    <link rel="stylesheet" href="./stylesheets/style.css">
+
+    <!-- JS, Popper.js, and jQuery -->
     <!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"-->
     <!--            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"-->
     <!--            crossorigin="anonymous"></script>-->
@@ -23,7 +26,12 @@
     <!--            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"-->
     <!--            crossorigin="anonymous"></script>-->
 
-    <link rel="stylesheet" href="./stylesheets/style.css">
+    <!-- At the moment Lodash used for throttle function on scroll events -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"
+            integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+
+    <!-- Main JavaScript file, the entry point into the application -->
+    <script defer src="./javascripts/main.js"></script>
 
 </head>
 
@@ -39,14 +47,10 @@
 
 <div class="container-fluid">
     <div id="cards-container" class="row d-flex align-items-center">
-<!--         JavaScript generated columns appended here       -->
+        <!--         JavaScript generated columns appended here       -->
     </div>
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"
-        integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
-<script src="./javascripts/main.js"></script>
 
 </body>
 </html>
