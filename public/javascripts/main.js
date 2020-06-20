@@ -31,6 +31,8 @@ socket.onmessage = (event) => {
     // Parse data from back-end before processing it
     const data = JSON.parse(event.data);
 
+    // TODO: what if total photos = 0? inform the user
+
     console.info('Message from server:', data); ///////////// FOR DEVELOPING PURPOSES ONLY ///////
 
     // Pass parsed data from server for processing and eventually appending DOM with images
@@ -51,25 +53,30 @@ const processDataFromServer = function processFlickrDataFromServer({page, pages,
 
 /**
  * Destructure object argument and make divs and img elements structure, form img src url, then append to DOM
- * <div id="cards-container" class="row">
- *     <div class="col-12 col-lg-6 col-xl-4 card-img">
- *          <img class="img-thumbnail" src="..." alt="Card title">
- *          <div class="card-img-overlay">
- *              <h5 class="card-title">Card title</h5>
+ * <div id="cards-container" class="row d-flex align-items-center">
+ *     <div class="col-12 col-lg-6 col-xl-4 col-element">
+ *          <div class="img-card">
+ *              <img class="img-thumbnail" src="..." alt="Card title">
+ *              <div class="card-img-overlay">
+ *                  <h5 class="card-title">Card title</h5>
  */
 const appendImage = function appendImageToDOM({farm, id, secret, server, title}) {
 
-    // Create new div element for image card
-    const divCardElement = document.createElement('div');
-
+    // Create new div element for columns
+    const divColElement = document.createElement('div');
     /**
-     * Then display size < 992px use one column across 12;
-     * then it is Large (≥992px) use two columns 6+6;
-     * then Extra large (≥1200px) use three columns 4+4+4
+     * Grid breaking points for all viewport and device sizes are:
+     * Then display size < 992px use one column across: 12 (col-12);
+     * then it is Large (≥992px) use two columns: 6+6 (col-lg-6);
+     * then Extra large (≥1200px) use three columns: 4+4+4 (col-xl-4).
      */
-    divCardElement.className = 'col-12 col-lg-6 col-xl-4 card-img';
+    divColElement.className = 'col-12 col-lg-6 col-xl-4 col-element';
 
-    // Create new img element with src pointing to Flickr servers, so it can be displayed by a browser
+    // Create new div element and add img-card class, it will act as image container-card
+    const divCardElement = document.createElement('div')
+    divCardElement.classList.add('img-card')
+
+    // Create new img element with src pointing to Flickr servers, so it can be downloaded and displayed by a browser
     const imgThumbElement = document.createElement('img');
     imgThumbElement.classList.add('img-thumbnail')
     imgThumbElement.alt = title;
@@ -95,23 +102,34 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
     // img.src = 'https://farm' + farm + '.staticflickr.com/' + server + '/' + id + '_' + secret + '.jpg';
     imgThumbElement.src = 'https://farm' + farm + '.staticflickr.com/' + server + '/' + id + '_' + secret + '_z.jpg';
 
-    // Then image downloaded by browser set its opacity to 1 for fade-in transition effect
+    // Then image downloaded by browser set its grand parent element's opacity to 1 for fade-in transition effect
     imgThumbElement.onload = () => {
-        imgThumbElement.style.opacity = '1';
+        divColElement.style.opacity = '1';
     }
 
     // Insert card-img-overlay element with title received from Flickr
-    // divCardElement.innerHTML = '<div class="img-overlay"><h5 class="card-title">' + title + '</h5></div>';
+    divCardElement.innerHTML = '<div class="img-overlay"><h5 class="card-title">' + title + '</h5></div>';
 
-    // append created img element to div element as child
-    divCardElement.append(imgThumbElement);
+    // Append created img element to div acting as card
+    divCardElement.appendChild(imgThumbElement);
 
-    // append created div element to cardsContainer element as child
-    cardsContainer.append(divCardElement);
+    // Append card div element to column div element as a child
+    divColElement.appendChild(divCardElement);
+
+    // TODO: remove loading icon before appending newimages into DOM
+
+
+    // Append created div element to cardsContainer element as a child
+    cardsContainer.appendChild(divColElement);
 }
+
+// TODO: on click of individual photo enlarge picture of biggest available size suffix, put Title at the bottom and url to Flickr
 
 // Fetch images from Flick by sending a WebSocket message to back-end with request data
 const fetchImages = function fetchImagesFromBackEnd(searchQuery, page) {
+
+    // TODO: add loading icon while fetching
+
     // Save current searchQuery and page on windows object
     this.searchQuery = searchQuery;
     this.page = page;
