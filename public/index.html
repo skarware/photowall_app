@@ -7,6 +7,7 @@
     <meta name="keywords" content="HTML, CSS, JavaScript, Flickr, Node.js, WebSocket, Express.js">
     <meta name="author" content="Martynas Skaringa">
     <title>PhotoWall App</title>
+    <link rel="icon" href="./images/favicon.png">
 
     <!-- Bootstrap CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -37,9 +38,9 @@
 
 <body class="bg-dark">
 <header>
-    <div id="searchbar" class="fixed-top">
-        <form id="search-form" class="d-flex justify-content-center">
-            <input id="search" class="form-control form-control-lg transparent-input w-50 p-3 shadow-sm" type="search"
+    <div id="searchbar">
+        <form id="search-form">
+            <input id="search" class="form-control form-control-lg mx-auto transparent-input w-50 p-3 shadow-sm" type="search"
                    placeholder="Search for images on Flickr" aria-label="Search" autocomplete="off">
         </form>
     </div>
@@ -51,6 +52,36 @@
     </div>
 </div>
 
+<!--&lt;!&ndash; Button trigger modal &ndash;&gt;-->
+<!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">-->
+<!--    Launch demo modal-->
+<!--</button>-->
+
+<!--&lt;!&ndash; Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"-->
+<!--     aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                ...-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--                <button type="button" class="btn btn-primary">Save changes</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<div id="spinner-container" class="text-center fixed-bottom m-3">
+    <div class="spinner-border text-warning" role="status"></div>
+</div>
 
 </body>
 </html>

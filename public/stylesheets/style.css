@@ -1,6 +1,11 @@
 #searchbar {
-    transition: top 0.5s; /* Transition effect when sliding down (and up) */
+    position: fixed;
+    right: 0;
+    left: 0;
     top: 25px;
+    z-index: 1040;
+    /* Transition effect when sliding down (and up) */
+    transition: top 0.5s;
 }
 
 .form-control {

@@ -1,7 +1,8 @@
 // Define more often used DOM elements
-const cardsContainer = document.getElementById('cards-container')
+const cardsContainer = document.getElementById('cards-container');
 const searchForm = document.getElementById('search-form');
-const searchBar = document.getElementById('searchbar')
+const searchBar = document.getElementById('searchbar');
+const spinnerContainer = document.getElementById('spinner-container');
 
 // Initial page is 0 and searchQuery an empty string
 let page = 0;
@@ -15,29 +16,54 @@ const socket = new WebSocket('ws://localhost:3000');
  * it defines listeners for WebSocket evens: open, error, close and message
  */
 const mainInit = function mainInitializationFunction() {
-    // On page initialization then WebSocket connection is open fetch photos from Flickr
+    // On page initialization then WebSocket connection is open and ready, fetch photos from Flickr
     socket.onopen = (event) => {
-
-        // TODO: test what happens if open event handler is set significantly delayed, after socket was created outside this fn
-
-        console.info('Connected to server:', event.target.url);
+        // Print some development related info to console
+        console.info('Connection to server opened:', event.target.url);
         // empty string is condition for fetch interesting photos for the most recent day on Flickr
         fetchImages('', 1);
     }
 
     // Listen for WebSocket error
-    socket.onerror = (event) => {
-        console.error('ERROR:', event);
+    socket.onerror = (error) => {
+        // Print error to the console in case the app user is someone like myself
+        console.error('ERROR:', error);
+
+        // Add message to the DOM to inform mere mortals on UI about the error
+        const divAlertContainer = document.createElement('div');
+
+        // Add classes to the created div
+        divAlertContainer.className = 'alert-container vh-100 d-flex align-items-center mx-auto';
+
+        // Insert other alert elements to div
+        divAlertContainer.innerHTML =
+            (
+                '<div class="alert alert-danger" role="alert" style="z-index:1100">' +
+                '<h4 class="alert-heading text-center">SheeEEEeeit, something went very wrong...' +
+                '<span class="d-block text-center py-3 my-3"><strong>Sorry mate, we lost touch with Internets reality (server)</strong></span>' +
+                '</h4>' +
+                '<hr>' +
+                '<p class="mb-0 text-center">Check your Internets connection, refresh the page, ask your mama or go away.</p>' +
+                '</div>'
+            );
+
+        // Append alert to the DOM
+        cardsContainer.appendChild(divAlertContainer);
     }
 
-    // Listen for WebSocket connection closing
+// Listen for WebSocket connection closing
     socket.onclose = (event) => {
-        console.info('Disconnecting from server:', event.code);
-
+        if (event.wasClean) {
+            // if connection to a server closed cleanly no need to inform the user as he is probably gone for good
+            console.info(`Connection to server closed cleanly, code=${event.code} reason=${event.reason}`);
+        } else {
+            // else if connection closed not gracefully, server process killed or network down then it is an error and its handler will take care of everything
+            console.error(`Connection died, code=${event.code} reason=${event.reason}`);
+        }
         // TODO: need to implement auto reconnect on lost of connection to WebSocket server
     }
 
-    // Listen for WebSocket messages from back-end server
+// Listen for WebSocket messages from back-end server
     socket.onmessage = (event) => {
         // Parse data from back-end before processing it
         const data = JSON.parse(event.data);
@@ -49,7 +75,22 @@ const mainInit = function mainInitializationFunction() {
             // If total photos = 0 inform the user
             console.info("No photos found with searchQuery ", this.searchQuery);
 
-            // TODO: add message to the DOM to inform the user about zero search results
+            // Add message to the DOM to inform the user about zero search results
+            cardsContainer.innerHTML =
+                (
+                    '<div class="alert-container d-flex align-items-center justify-content-center fixed-top h-100">' +
+                    '<div class="alert alert-primary" role="alert">' +
+                    '<h4 class="alert-heading text-center">Sorry mate, there is nothing for you in name of the' +
+                    '<span class="d-block text-center py-2 my-2"><strong>' + this.searchQuery + '</strong></span>' +
+                    '</h4>' +
+                    '<hr>' +
+                    '<p class="mb-0 text-center">Check your spelling or try something else, Would you?</p>' +
+                    '</div>' +
+                    '</div>'
+                );
+
+            // Focus search input field for new query
+            document.getElementById('search').focus();
 
         } else {
             // Pass parsed data from server for processing and eventually appending DOM with images
@@ -132,7 +173,11 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
 
     // Then image downloaded by browser set its grand parent element's opacity to 1 for fade-in transition effect
     imgThumbElement.onload = () => {
+        // Make it visible on DOM
         divColElement.style.opacity = '1';
+
+        // Remove loading icons then newly fetched images appended into DOM
+        spinnerContainer.innerHTML = '';
     }
 
     // FIXME: card title is out of image bounds seems that is because it is relative to divCardElement
@@ -145,9 +190,6 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
     // Append card div element to column div element as a child
     divColElement.appendChild(divCardElement);
 
-    // TODO: remove loading icon before appending newimages into DOM
-
-
     // Append created div element to cardsContainer element as a child
     cardsContainer.appendChild(divColElement);
 }
@@ -157,13 +199,14 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
 // Fetch images from Flick by sending a WebSocket message to back-end with request data
 const fetchImages = function fetchImagesFromBackEnd(searchQuery, page) {
 
-    // TODO: add loading icon while fetching
+    // Add loading icons at the bottom of body element inside spinner-container while fetching
+    spinnerContainer.innerHTML = '<div class="spinner-border text-warning" role="status"></div>';
 
     // Save current searchQuery and page on windows object
     this.searchQuery = searchQuery;
     this.page = page;
 
-    console.log('fetchImages(', searchQuery, page);
+    console.log('fetchImages(', searchQuery, page, ')');
     console.log('this.searchQuery and this.page: ', this.searchQuery, this.page);
 
     // Send JSON message to WebSocket server with request data
