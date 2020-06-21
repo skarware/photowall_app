@@ -24,12 +24,9 @@ const mainInit = function mainInitializationFunction() {
         fetchImages('', 1);
     }
 
-    // Listen for WebSocket error
-    socket.onerror = (error) => {
-        // Print error to the console in case the app user is someone like myself
-        console.error('ERROR:', error);
+    // Add message to the DOM to inform mere mortals on UI about the error
+    const displayErrorAlertMsg = function displayErrorAlertMessageToUser() {
 
-        // Add message to the DOM to inform mere mortals on UI about the error
         const divAlertContainer = document.createElement('div');
 
         // Add classes to the created div
@@ -51,6 +48,15 @@ const mainInit = function mainInitializationFunction() {
         cardsContainer.appendChild(divAlertContainer);
     }
 
+    // Listen for WebSocket error
+    socket.onerror = (error) => {
+        // Print error to the console in case the app user is someone like myself
+        console.error('ERROR:', error);
+
+        // Display error alert message to the user
+        displayErrorAlertMsg();
+    }
+
 // Listen for WebSocket connection closing
     socket.onclose = (event) => {
         if (event.wasClean) {
@@ -59,6 +65,9 @@ const mainInit = function mainInitializationFunction() {
         } else {
             // else if connection closed not gracefully, server process killed or network down then it is an error and its handler will take care of everything
             console.error(`Connection died, code=${event.code} reason=${event.reason}`);
+
+            // Display error alert message to the user
+            displayErrorAlertMsg();
         }
         // TODO: need to implement auto reconnect on lost of connection to WebSocket server
     }
@@ -100,10 +109,10 @@ const mainInit = function mainInitializationFunction() {
 }
 
 /**
- * make sure main initialization function called only when the page has completely loaded,
- * even if defer is set on html side it is better to be safe than sorry.
+ * Invoke main initialization function first thing on this file
+ * as it is main entry point to application and should run first thing
  */
-window.onload = mainInit;
+mainInit();
 
 /**
  * All named function expressions (eslint: func-style) defined below this line
