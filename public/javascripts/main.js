@@ -2,6 +2,7 @@
 const cardsContainer = document.getElementById('cards-container');
 const searchForm = document.getElementById('search-form');
 const searchBar = document.getElementById('searchbar');
+const searchInput = document.getElementById('search');
 const spinnerContainer = document.getElementById('spinner-container');
 
 // Initial page is 0 and searchQuery an empty string
@@ -24,13 +25,22 @@ const mainInit = function mainInitializationFunction() {
         fetchImages('', 1);
     }
 
+    // Listen for WebSocket error
+    socket.onerror = (error) => {
+        // Print error to the console in case the app user is someone like myself
+        console.error('ERROR:', error);
+
+        // TODO: add error processing and inform the user on UI if any of fatal type
+    }
+
+
     // Add message to the DOM to inform mere mortals on UI about the error
-    const displayErrorAlertMsg = function displayErrorAlertMessageToUser() {
+    const displayLostConnectionAlert = function displayLostConnectionAlertToUserOnUI() {
 
         const divAlertContainer = document.createElement('div');
 
         // Add classes to the created div
-        divAlertContainer.className = 'alert-container vh-100 d-flex align-items-center mx-auto';
+        divAlertContainer.className = 'alert-container vh-100 d-flex align-items-center justify-content-center w-100';
 
         // Insert other alert elements to div
         divAlertContainer.innerHTML =
@@ -46,18 +56,17 @@ const mainInit = function mainInitializationFunction() {
 
         // Append alert to the DOM
         cardsContainer.appendChild(divAlertContainer);
+
+        // Remove loading icons then alert is shown or user might be confused if app still tries to reconnect (at current version no auto reconnect functionality)
+        spinnerContainer.innerHTML = '';
+
+        // Disable search input and put information about lost connection to a server, if not it might make user confused if app works or not
+        searchInput.value = 'Connection to a server lost, refresh the page';
+        searchInput.disabled = true;
+
     }
 
-    // Listen for WebSocket error
-    socket.onerror = (error) => {
-        // Print error to the console in case the app user is someone like myself
-        console.error('ERROR:', error);
-
-        // Display error alert message to the user
-        displayErrorAlertMsg();
-    }
-
-// Listen for WebSocket connection closing
+    // Listen for WebSocket connection closing
     socket.onclose = (event) => {
         if (event.wasClean) {
             // if connection to a server closed cleanly no need to inform the user as he is probably gone for good
@@ -67,12 +76,12 @@ const mainInit = function mainInitializationFunction() {
             console.error(`Connection died, code=${event.code} reason=${event.reason}`);
 
             // Display error alert message to the user
-            displayErrorAlertMsg();
+            displayLostConnectionAlert();
         }
         // TODO: need to implement auto reconnect on lost of connection to WebSocket server
     }
 
-// Listen for WebSocket messages from back-end server
+    // Listen for WebSocket messages from back-end server
     socket.onmessage = (event) => {
         // Parse data from back-end before processing it
         const data = JSON.parse(event.data);
@@ -98,8 +107,11 @@ const mainInit = function mainInitializationFunction() {
                     '</div>'
                 );
 
+            // Remove loading icons then search is done and alert is shown as a result or user might be confused if app still loading or done with given search query
+            spinnerContainer.innerHTML = '';
+
             // Focus search input field for new query
-            document.getElementById('search').focus();
+            searchInput.focus();
 
         } else {
             // Pass parsed data from server for processing and eventually appending DOM with images
@@ -133,11 +145,10 @@ const processDataFromServer = function processFlickrDataFromServer({page, pages,
 /**
  * Destructure object argument and make divs and img elements structure, form img src url, then append to DOM
  * <div id="cards-container" class="row d-flex align-items-center">
- *     <div class="col-12 col-lg-6 col-xl-4 col-element">
+ *     <div class="col-12 col-lg-6 col-xl-4">
  *          <div class="img-card">
  *              <img class="img-thumbnail" src="..." alt="Card title">
- *              <div class="card-img-overlay">
- *                  <h5 class="card-title">Card title</h5>
+ *              <h5 class="img-overlay-title">Card title</h5>
  */
 const appendImage = function appendImageToDOM({farm, id, secret, server, title}) {
     // Create new div element for columns
@@ -148,7 +159,7 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
      * then it is Large (≥992px) use two columns: 6+6 (col-lg-6);
      * then Extra large (≥1200px) use three columns: 4+4+4 (col-xl-4).
      */
-    divColElement.className = 'col-12 col-lg-6 col-xl-4 col-element';
+    divColElement.className = 'col-12 col-lg-6 col-xl-4';
 
     // Create new div element and add img-card class, it will act as image container-card
     const divCardElement = document.createElement('div')
@@ -189,9 +200,8 @@ const appendImage = function appendImageToDOM({farm, id, secret, server, title})
         spinnerContainer.innerHTML = '';
     }
 
-    // FIXME: card title is out of image bounds seems that is because it is relative to divCardElement
-    // Insert card-img-overlay element with title received from Flickr
-    divCardElement.innerHTML = '<div class="img-overlay"><h5 class="card-title">' + title + '</h5></div>';
+    // Insert img-overlay-title element with title received from Flickr
+    divCardElement.innerHTML = '<h5 class="img-overlay-title">' + title + '</h5>';
 
     // Append created img element to div acting as card
     divCardElement.appendChild(imgThumbElement);
