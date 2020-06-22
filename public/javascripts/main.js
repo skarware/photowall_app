@@ -10,7 +10,7 @@ let page = 0;
 let searchQuery = '';
 
 // Create a WebSocket and connect to a server
-const socket = new WebSocket('ws://localhost:3000');
+const socket = new WebSocket('ws://nodejs.skaringa.dev:80');
 
 /**
  * main initialization function is the entry point into the application.
