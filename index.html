@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="PhotoWall App (images from Flickr)">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Flickr, Node.js, WebSocket, Express.js">
+    <meta name="author" content="Martynas Skaringa">
+    <title>PhotoWall App</title>
+    <link rel="icon" href="./images/favicon.png">
+
+    <!-- Bootstrap CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- Main CSS to override or papildyti app styles -->
+    <link rel="stylesheet" href="./stylesheets/style.css">
+
+    <!-- JS, Popper.js, and jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+                integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+                crossorigin="anonymous"></script>
+
+    <!-- At the moment Lodash used for throttle function on scroll events -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"
+            integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
+
+    <!-- Main JavaScript file, the entry point into the application -->
+    <script defer src="./javascripts/main.js"></script>
+
+</head>
+
+<body class="bg-dark">
+<header>
+    <div id="searchbar">
+        <form id="search-form">
+            <input id="search" class="form-control form-control-lg mx-auto transparent-input w-50 p-3 shadow-sm" type="search"
+                   placeholder="Search for images on Flickr" aria-label="Search" autocomplete="off">
+        </form>
+    </div>
+</header>
+
+<!-- Extra large modal -->
+<!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-xl">Extra large modal</button>-->
+
+<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <img src="https://farm66.staticflickr.com/65535/50024765548_8110ec93bd_b.jpg" alt="">
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div id="cards-container" class="row">
+        <!--         JavaScript generated columns appended here       -->
+    </div>
+</div>
+
+
+
+<div id="spinner-container" class="text-center fixed-bottom m-3">
+    <div class="spinner-border text-warning" role="status"></div>
+</div>
+
+</body>
+</html>
