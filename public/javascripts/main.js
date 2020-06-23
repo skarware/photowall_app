@@ -10,7 +10,8 @@ let page = 0;
 let searchQuery = '';
 
 // Create a WebSocket and connect to a server
-const socket = new WebSocket('ws://nodejs.skaringa.dev:80');
+const socket = new WebSocket('wss://nodejs.skaringa.dev/photowall_app');
+// const socket = new WebSocket('wss://localhost:3000');  ///////////// FOR DEVELOPING PURPOSES ONLY ///////
 
 /**
  * main initialization function is the entry point into the application.

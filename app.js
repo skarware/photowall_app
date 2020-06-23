@@ -15,8 +15,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', indexRouter);
 
-// To run WebSocket on same port as http server createServer and pass it to WebSocket as parameter
-const server = require('http').createServer(app);
+/**
+ * App will use a wss:// protocol because encrypted WebSocket is more reliable, as data are wrapped in TLS, same way HTTPS is HTTP wrapped in TLS.
+ * So from network nodes perspective WS data become no different from HTTPS and old proxy servers or firewalls will not drop possibly-unknown WebSocket packet.
+ */
+const fs = require('fs');
+const privateKey = fs.readFileSync('../privkey.pem');
+const publicKeyCertificate = fs.readFileSync('../cert.pem');
+const credentials = {key: privateKey, cert: publicKeyCertificate};
+
+// To run WebSocket over TLS on same port as https server, pass a createServer result to WebSocket as parameter
+const server = require('https').createServer(credentials, app);
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({server});
 
