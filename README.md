@@ -1,14 +1,16 @@
 # PhotoWall_App
 
-## Live Demo
+## Live Demo (publicly accessible front-end on GitHub Pages; back-end on FreeBSD 12 machine)
 https://skarware.github.io/photowall_app/
 
 ## About
 
 PhotoWall App idea came from one of home/job tasks I got while looking for my first job as a web developer; 
-Application made using <b><i>JavaScript(ES6+), Node.js, npm, Express, flickr-sdk, WebSockets, Bootstrap and Let's Encrypt certificate</i></b> for TLS over HTTP and WS protocols.
+Application made using <b><i>JavaScript(ES6+), Node.js, npm, Express, flickr-sdk, WebSockets, Bootstrap and Let's Encrypt certificate</i></b> for TLS to secure HTTP and WS protocols.
 
-Project developed using Node.js v14.3.0 on Win10, but tested to work and run Live Demo App on v12.16.1_1 on my FreeBSD machine (the back-end part).
+App uses a wss:// protocol because encrypted WebSocket is more reliable as data wrapped in TLS, same way HTTPS is HTTP wrapped in TLS. So from network nodes perspective WS data become no different from HTTPS and old proxy servers or firewalls will not drop possibly-unknown WebSocket packet.
+
+Project developed using Node.js v14.3.0 on Win10, but tested to work and run Live Demo App on v12.16.1_1 on my FreeBSD machine (the back-end part, while front-end is publicly accessible on GitHub Pages).
 
 Made a decent effort to make code [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) compatible.
 
@@ -35,7 +37,7 @@ To run the program use npm start script (defined in package.json):
 npm start
 ```
 It will start HTTPS and WebSocket servers listening on port 3000 by default (Change if must inside ./bin/www file).
-Therefore, if you run the back-end of the app locally you can reach front-end with url https://localhost:3000, and all went well you should see debug information printed to stdout by back-end server:
+Therefore, if you run the back-end of the app locally you can reach front-end with url https://localhost:3000, and all went well you should see debug information printed to stdout by Node.js:
 ```
 skarware@citadel:~/photowall_app % npm start
 
