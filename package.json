@@ -9,7 +9,7 @@
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "~4.17.3",
     "flickr-sdk": "^3.9.0",
     "morgan": "~1.9.1",
     "ws": "^7.3.0"
